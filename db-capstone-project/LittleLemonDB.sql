@@ -47,22 +47,22 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `LittleLemonDB`.`Category`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Category` (
-  `CategoryID` INT NOT NULL AUTO_INCREMENT COMMENT 'To store information about starters, main-courses, desserts, and drinks.',
-  `Title` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`CategoryID`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `LittleLemonDB`.`CuisineCategory`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`CuisineCategory` (
   `CuisineCategoryID` INT NOT NULL AUTO_INCREMENT COMMENT 'To store information about cuisines.',
   `Title` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`CuisineCategoryID`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `LittleLemonDB`.`Category`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Category` (
+  `CategoryID` INT NOT NULL AUTO_INCREMENT COMMENT 'To store information about starters, main-courses, desserts, and drinks.',
+  `Title` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`CategoryID`))
 ENGINE = InnoDB;
 
 
@@ -75,18 +75,35 @@ CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`MenuItem` (
   `Price` DECIMAL NOT NULL,
   `Inventory` INT NOT NULL,
   `CategoryID` INT NOT NULL,
-  `CuisineCategoryID` INT NOT NULL,
   PRIMARY KEY (`MenuItemID`),
   INDEX `category_id_fk_idx` (`CategoryID` ASC) VISIBLE,
-  INDEX `cuisine_category_id_fk_idx` (`CuisineCategoryID` ASC) VISIBLE,
   CONSTRAINT `category_id_fk`
     FOREIGN KEY (`CategoryID`)
     REFERENCES `LittleLemonDB`.`Category` (`CategoryID`)
     ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `cuisine_category_id_fk`
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `LittleLemonDB`.`Menus`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Menus` (
+  `MenuID` INT NOT NULL AUTO_INCREMENT,
+  `Name` VARCHAR(255) NOT NULL,
+  `CuisineCategoryID` INT NOT NULL,
+  `MenuItemID` INT NOT NULL,
+  PRIMARY KEY (`MenuID`),
+  INDEX `cuisine_category_id_fk_idx` (`CuisineCategoryID` ASC) VISIBLE,
+  INDEX `menu_item_id_fk_idx` (`MenuItemID` ASC) VISIBLE,
+  CONSTRAINT `menus_cuisine_category_id_fk`
     FOREIGN KEY (`CuisineCategoryID`)
     REFERENCES `LittleLemonDB`.`CuisineCategory` (`CuisineCategoryID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `menu_item_id_fk`
+    FOREIGN KEY (`MenuItemID`)
+    REFERENCES `LittleLemonDB`.`MenuItem` (`MenuItemID`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
@@ -101,18 +118,18 @@ CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Orders` (
   `Quantity` INT NOT NULL,
   `TotalCost` DECIMAL NOT NULL,
   `CustomerID` INT NOT NULL,
-  `MenuItemID` INT NOT NULL,
+  `MenuID` INT NOT NULL,
   PRIMARY KEY (`OrderID`),
   INDEX `customer_id_fk_idx` (`CustomerID` ASC) VISIBLE,
-  INDEX `menu_item_id_fk_idx` (`MenuItemID` ASC) VISIBLE,
+  INDEX `menu_id_fk_idx` (`MenuID` ASC) VISIBLE,
   CONSTRAINT `orders_customer_id_fk`
     FOREIGN KEY (`CustomerID`)
     REFERENCES `LittleLemonDB`.`Customers` (`CustomerID`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `menu_item_id_fk`
-    FOREIGN KEY (`MenuItemID`)
-    REFERENCES `LittleLemonDB`.`MenuItem` (`MenuItemID`)
+  CONSTRAINT `menu_id_fk`
+    FOREIGN KEY (`MenuID`)
+    REFERENCES `LittleLemonDB`.`Menus` (`MenuID`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
@@ -135,8 +152,10 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Staff` (
   `StaffID` INT NOT NULL AUTO_INCREMENT,
-  `Username` VARCHAR(255) NOT NULL,
-  `Password` VARCHAR(255) NOT NULL,
+  `FirstName` VARCHAR(45) NOT NULL,
+  `LastName` VARCHAR(45) NOT NULL,
+  `Email` VARCHAR(255) NOT NULL,
+  `ContactNumber` VARCHAR(45) NOT NULL,
   `Role` VARCHAR(45) NOT NULL,
   `Salary` DECIMAL NOT NULL,
   PRIMARY KEY (`StaffID`))
