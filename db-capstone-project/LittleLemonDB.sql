@@ -33,13 +33,14 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Bookings` (
   `BookingID` INT NOT NULL AUTO_INCREMENT,
   `BookingDate` DATE NOT NULL,
+  `BookingSlot` TIME NOT NULL,
   `TableNumber` INT NOT NULL,
   `Comment` VARCHAR(255) NULL,
   `CustomerID` INT NOT NULL,
   PRIMARY KEY (`BookingID`),
-  INDEX `customer_id_fk_idx` (`CustomerID` ASC) VISIBLE,
+  INDEX `customer_id_fk_idx` (`Comment` ASC) VISIBLE,
   CONSTRAINT `customer_id_fk`
-    FOREIGN KEY (`CustomerID`)
+    FOREIGN KEY (`Comment`)
     REFERENCES `LittleLemonDB`.`Customers` (`CustomerID`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
