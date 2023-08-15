@@ -89,11 +89,11 @@ ENGINE = InnoDB;
 -- Table `LittleLemonDB`.`Menus`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Menus` (
-  `MenuID` INT NOT NULL AUTO_INCREMENT,
+  `MenuID` INT NOT NULL,
   `Name` VARCHAR(255) NOT NULL,
   `CuisineCategoryID` INT NOT NULL,
   `MenuItemID` INT NOT NULL,
-  PRIMARY KEY (`MenuID`),
+  PRIMARY KEY (`MenuID`, `MenuItemID`),
   INDEX `cuisine_category_id_fk_idx` (`CuisineCategoryID` ASC) VISIBLE,
   INDEX `menu_item_id_fk_idx` (`MenuItemID` ASC) VISIBLE,
   CONSTRAINT `menus_cuisine_category_id_fk`
