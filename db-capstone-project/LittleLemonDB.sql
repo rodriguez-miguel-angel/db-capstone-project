@@ -38,9 +38,9 @@ CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Bookings` (
   `Comment` VARCHAR(255) NULL,
   `CustomerID` INT NOT NULL,
   PRIMARY KEY (`BookingID`),
-  INDEX `customer_id_fk_idx` (`Comment` ASC) VISIBLE,
+  INDEX `customer_id_fk_idx` (`CustomerID` ASC) VISIBLE,
   CONSTRAINT `customer_id_fk`
-    FOREIGN KEY (`Comment`)
+    FOREIGN KEY (`CustomerID`)
     REFERENCES `LittleLemonDB`.`Customers` (`CustomerID`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
@@ -68,12 +68,12 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `LittleLemonDB`.`MenuItem`
+-- Table `LittleLemonDB`.`MenuItems`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`MenuItem` (
+CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`MenuItems` (
   `MenuItemID` INT NOT NULL AUTO_INCREMENT COMMENT 'To store information about cuisines, starters, courses, drinks and desserts.',
   `MenuItemName` VARCHAR(255) NOT NULL,
-  `Price` DECIMAL NOT NULL,
+  `Price` DECIMAL(10,2) NOT NULL,
   `Inventory` INT NOT NULL,
   `CategoryID` INT NOT NULL,
   PRIMARY KEY (`MenuItemID`),
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Menus` (
     ON UPDATE CASCADE,
   CONSTRAINT `menu_item_id_fk`
     FOREIGN KEY (`MenuItemID`)
-    REFERENCES `LittleLemonDB`.`MenuItem` (`MenuItemID`)
+    REFERENCES `LittleLemonDB`.`MenuItems` (`MenuItemID`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Orders` (
   `OrderID` INT NOT NULL AUTO_INCREMENT,
   `OrderDate` DATE NOT NULL,
   `Quantity` INT NOT NULL,
-  `TotalCost` DECIMAL NOT NULL,
+  `TotalCost` DECIMAL(10,2) NOT NULL,
   `CustomerID` INT NOT NULL,
   `MenuID` INT NOT NULL,
   PRIMARY KEY (`OrderID`),
@@ -142,8 +142,9 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Address` (
   `AddressID` INT NOT NULL AUTO_INCREMENT,
   `Street` VARCHAR(255) NOT NULL,
+  `City` VARCHAR(45) NOT NULL,
   `State` VARCHAR(45) NOT NULL,
-  `ZipCode` VARCHAR(45) NULL,
+  `ZipCode` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`AddressID`))
 ENGINE = InnoDB;
 
