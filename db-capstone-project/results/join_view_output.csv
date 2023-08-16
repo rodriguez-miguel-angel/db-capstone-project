@@ -1,0 +1,5 @@
+CustomerID,FullName,OrderID,TotalCost,Name,MenuItemName
+1,"Mario Lopez",5,176.00,Lunch,Olives
+1,"Mario Lopez",5,176.00,Lunch,Minestrone
+1,"Mario Lopez",5,176.00,Lunch,"Greek salad"
+1,"Mario Lopez",5,176.00,Lunch,Pizza
