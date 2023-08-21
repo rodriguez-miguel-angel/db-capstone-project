@@ -5,24 +5,28 @@ DECLARE default_booking_slot TIME DEFAULT '15:00:00';                  -- Local 
 START TRANSACTION; 
 	
 	# see if customer exists
-	SELECT @result:= count(CustomerID) FROM Customers where CustomerID in (customer_id);
+	SELECT @customer_result:= count(CustomerID) FROM Customers where CustomerID in (customer_id);
 
-	IF (@result = 0) THEN 
+	# see if booking_date already exists
+	SELECT @booking_date_result:= count(BookingDate) FROM Bookings where BookingDate in (booking_date);
+
+	IF (@customer_result = 0) THEN 
 		SELECT	'Error. Customer does not exists in the database.';
 		ROLLBACK;
 	ELSE
-		# see if table_number is an appropriate input
-		if table_number in (2, 3, 4, 5, 6, 10, 15) THEN
+		# see whether input is appropriate
+		if table_number in (2, 3, 4, 5, 6, 10, 15) and (@booking_date_result = 0) THEN
 			REPLACE INTO Bookings(BookingID, BookingDate, BookingSlot, TableNumber, CustomerID) 
 			VALUES (booking_id, booking_date, default_booking_slot, table_number, customer_id);
 			Select 'Booking added' as Confirmation; 
 		else
-			select 'Error. Review possible values for Table Number.';
+			select 'Error. Invalid Input.' as 'Error';
 		COMMIT;
 		END IF;
 	END IF;
 END$$
 DELIMITER ;
+
 
 DELIMITER $$
 CREATE DEFINER=`db-capstone-user`@`%` PROCEDURE `AddValidBooking`(IN booking_date DATE, IN table_number INT)
@@ -97,12 +101,15 @@ START TRANSACTION;
 	# see if booking exists
 	SELECT @result:= count(BookingID) FROM Bookings where BookingID in (booking_id);
 
+	# see if booking_date already exists
+	SELECT @booking_date_result:= count(BookingDate) FROM Bookings where BookingDate in (booking_date);
+
 	IF (@result = 0) THEN 
 		SELECT	'Error. Booking does not exists in the database.';
 		ROLLBACK;
 	ELSE
 		# see if booking_date is an appropriate input
-		if booking_date > '2022-01-01' THEN
+		if booking_date > '2022-01-01' and (@booking_date_result = 0) THEN
 			UPDATE Bookings SET BookingDate = booking_date where BookingID in (booking_id);
 			Select 'Booking updated' as Confirmation; 
 		else
@@ -112,5 +119,4 @@ START TRANSACTION;
 	END IF;
 END$$
 DELIMITER ;
-
 

@@ -1,6 +1,6 @@
 show databases;
 use littlelemondb;
-show tables;
+# show tables;
 
 # select o.Quantity from Orders as o where o.Quantity > 2
 
@@ -19,10 +19,12 @@ show tables;
 # call AddValidBooking("2022-12-17", 4);
 
 # call AddBooking(29, 3, '2022-12-30', 4);
+# call AddBooking(29, 3, '2022-12-30', 4);
 
 # call UpdateBooking(29, '2022-12-30');
-
 # call UpdateBooking(29, '2022-12-17'); 
+
+# call UpdateBooking(29, '2022-12-19');
 
 # call CancelBooking(30); 
 
